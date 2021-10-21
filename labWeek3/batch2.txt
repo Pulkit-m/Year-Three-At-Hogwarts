@@ -1,0 +1,8 @@
+ls -al
+wc task.c
+ping www.google.com
+whoami
+touch newfile2.c
+cp task.c newfile2.c
+diff task.c newfile2.c
+gcc newfile2.c -o newfile2.out
