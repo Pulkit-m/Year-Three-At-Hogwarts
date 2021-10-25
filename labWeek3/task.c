@@ -126,7 +126,6 @@ int main(int argc, char* argv[])
         {
             if(command[5] >= '0' && command[5] <= '9')
             {
-                printf("sochte hain abhi\n"); 
                 char substr[10];
                 for(i = 5; command[i]!='\0' ; i++)
                 {
@@ -138,7 +137,7 @@ int main(int argc, char* argv[])
                 {
                     ptr = ptr->next;
                 }     
-                system(ptr->command);
+                execute(ptr->command, HISTORY);
             }
             else{
                 char substr[50];
@@ -146,8 +145,30 @@ int main(int argc, char* argv[])
                 {
                     substr[i-5] = command[i];
                 }substr[i-5] = '\0';
-                printf("%s \n",substr);
-                system(substr);
+                // printf("%s \n",substr);
+                char word1[50];
+                int j;
+                for(j = 0 ; substr[j]!=' ' && substr[j]!='\n' && substr[j]!='\0'; j++)
+                {
+                    word1[j] = substr[j];
+                }word1[j] = '\0';
+                printf("first word: %s \n", word1);
+                struct node* ptr2 = HISTORY.HEAD;
+                int flag = 0;
+                while(ptr2!=NULL)
+                {
+                    if(strstr(ptr2->command, word1))
+                    {
+                        execute(substr, HISTORY);
+                        flag = 1;
+                        break;
+                    }
+                    ptr2 = ptr2->next;
+                }
+                if(flag == 0){
+                    printf("***ERROR: command not found \n");
+                }
+                // execute(substr, HISTORY);
             }
         }
         else{
