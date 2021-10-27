@@ -1,3 +1,0 @@
-whoami 
-ls -la 
-wc commands.txt 
