@@ -133,11 +133,20 @@ int main(int argc, char* argv[])
                 }substr[i-5] = '\0';
                 int k = atoi(substr);
                 struct node* ptr = HISTORY.HEAD;
+                int flag1 = 0;
                 for(int i = 0 ; i < k; i++)
                 {
+                    if(ptr==NULL){
+                        printf("***ERROR: Segmentation Fault(Printed by me)");
+                        flag1 = 1;
+                        break;
+                    }
                     ptr = ptr->next;
                 }     
-                execute(ptr->command, HISTORY);
+                if(flag1==0)
+                {
+                    execute(ptr->command, HISTORY);
+                }
             }
             else{
                 char substr[50];
