@@ -55,22 +55,66 @@ void* rollDice()
 	return (void*)result;
 }
 
+int primes[10] = {2,3,5,7,11,13,17,19,23,29};
+
+void* getPrime(void* arg)
+{
+	int index = *(int*)arg;
+	int *value = malloc(sizeof(int));
+	*value = primes[index];
+	printf("%d ", primes[index]);
+	free(arg);
+	return (void*)value;
+}
+
+
 int main(int argc, char* argv[])
 {
-	pthread_t t;
-	srand(time(NULL));
-	int **res; 
-	if(pthread_create(&t, NULL, &rollDice, NULL)){
-		perror("Error in creating a thread\n");
-		return 1;
-	}
-	if(pthread_join(t, (void**)res)){
-		perror("Error in joining back thread\n");
-		return 2;
+
+	pthread_t th[10];
+	for(int i= 0 ; i < 10 ; i++)
+	{
+		int* a = malloc(sizeof(int));
+		*a = i;
+		if(pthread_create(&th[i], NULL, &getPrime, a)){
+			perror("thread was not created.");
+			return 1;
+		}
 	}
 
-	printf("After rolling dice: %d\n",**res);
-	free(*res);
+
+	int prime_copy[10];
+	for(int i = 0 ; i < 10; i++)
+	{
+		int *res;
+		if(pthread_join(th[i], (void**)&res))
+		{
+			perror("Error in joining thread\n");
+			return 2;
+		}
+		prime_copy[i] = *res;
+	}
+	printf("\n");
+	for(int i = 0 ; i < 10 ; i++)
+	{
+		printf("Value at %d: %d \n", i, prime_copy[i]);
+	}
+
+
+	// pthread_t t;
+	// srand(time(NULL));
+	// int **res; 
+	// if(pthread_create(&t, NULL, &rollDice, NULL)){
+	// 	perror("Error in creating a thread\n");
+	// 	return 1;
+	// }
+	// if(pthread_join(t, (void**)res)){
+	// 	perror("Error in joining back thread\n");
+	// 	return 2;
+	// }
+
+	// printf("After rolling dice: %d\n",**res);
+	// free(*res);
 	
 
 
