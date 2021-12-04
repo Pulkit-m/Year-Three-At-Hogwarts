@@ -5,6 +5,13 @@
 
 
 int x = 0 ;
+void* routine0()
+{
+	printf("first routine");
+
+
+}
+
 void* routine()
 {
 	//printf("Entering a thread\n");
@@ -22,12 +29,22 @@ void* routine2()
 }
 
 
+int mails = 0;
+void* routine3a()
+{
+	for(int i = 0 ; i < 100000 ; i++)
+	{
+		mails++;
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	pthread_t t1, t2;
-	pthread_create(&t1, NULL, &routine, NULL);
-	pthread_create(&t2, NULL, &routine2, NULL);
+	pthread_create(&t1, NULL, &routine3a, NULL);
+	pthread_create(&t2, NULL, &routine3a, NULL);
 	pthread_join(t1, NULL);
 	pthread_join(t2, NULL);
+	printf("Number of mails: %d\n",mails);
 	return 0;
 }
