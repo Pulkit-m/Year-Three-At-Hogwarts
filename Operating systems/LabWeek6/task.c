@@ -5,7 +5,7 @@
 #include <time.h>
 
 #define MAX 16
-
+pthread_mutex_t mutex= PTHREAD_MUTEX_INITIALIZER;;
 struct arglims_t{
     int start; 
     int end;
@@ -26,7 +26,9 @@ void* readArray(void* arg)
     int thread_no = *(int*)arg;
     for(int i = 0 ; i < MAX; i++)
     {
-        printf("Thread %d [%d]: %d \n", thread_no+1,i, ARRAY[i]);
+        pthread_mutex_lock(&mutex);
+        printf("Thread %d [%d]: %d \n", thread_no,i, ARRAY[i]);
+        pthread_mutex_unlock(&mutex);
     }
     free(arg);
 }
@@ -42,14 +44,20 @@ void* restrictedRead(void* arg)
     }
     for(int i = start; i<= end; i++ )
     {
-        printf("Thread %d [%d]: %d\n", thread_no+1,i, ARRAY[i]);
+        pthread_mutex_lock(&mutex);
+        printf("Thread %d [%d]: %d\n", thread_no,i, ARRAY[i]);
+        pthread_mutex_unlock(&mutex);
     }
+    
     // free(arg);
 }
 
 int main(int argc, char* argv[])
 {
     srand(time(NULL));
+    pthread_mutex_init(&mutex, NULL);
+
+
     printf("2019ucs0073 @pulkit_mahajan\n");
     printf("TASK - 1: Creating MAX number of threads to write to the global array\n");
     pthread_t thread[MAX];
@@ -132,5 +140,7 @@ int main(int argc, char* argv[])
         }
     }
 
+
+    pthread_mutex_destroy(&mutex);
     return 0;
 }
